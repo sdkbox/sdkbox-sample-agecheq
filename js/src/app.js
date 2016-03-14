@@ -31,20 +31,28 @@ var HelloWorldLayer = cc.Layer.extend({
     },
 
     createTestMenu:function() {
-        var item1 = new cc.MenuItemLabel(new cc.LabelTTF("Test Item 1", "sans", 28), function() {
-            cc.log("Test Item 1");
+        sdkbox.PluginAgeCheq.init();
+        sdkbox.PluginAgeCheq.setListener({
+            checkResponse : function (rtn, rtnmsg, apiversion, checktype, appauthorized, appblocked, parentverified, under13, under18, underdevage, trials) {
+                cc.log("checkResponse rtn:" + rtn + " rtnmsg:" + rtnmsg
+                    + " apiversion:" + apiversion + " checktype:" + checktype
+                    + " appauthorized:" + appauthorized + " appblocked:" + appblocked
+                    + " parentverified:" + parentverified + " under13:" + under13
+                    + " under18:" + under18 + " underdevage:" + underdevage + " trials:" + trials);
+            },
+            associateDataResponse : function (rtn, rtnmsg) {
+                cc.log("associateDataResponse rtn:" + rtn + " rtnmsg:" + rtnmsg);
+            }
         });
 
-        var item2 = new cc.MenuItemLabel(new cc.LabelTTF("Test Item 2", "sans", 28), function() {
-            cc.log("Test Item 2");
-        });
-
-        var item3 = new cc.MenuItemLabel(new cc.LabelTTF("Test Item 3", "sans", 28), function() {
-            cc.log("Test Item 3");
+        var item1 = new cc.MenuItemLabel(new cc.LabelTTF("check", "sans", 28), function() {
+            cc.log("check");
+            sdkbox.PluginAgeCheq.check("1426");
+            sdkbox.PluginAgeCheq.associateData("1426", "ikfill");
         });
 
         var winsize = cc.winSize;
-        var menu = new cc.Menu(item1, item2, item3);
+        var menu = new cc.Menu(item1);
         menu.x = winsize.width / 2;
         menu.y = winsize.height / 2;
         menu.alignItemsVerticallyWithPadding(20);

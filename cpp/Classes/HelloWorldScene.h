@@ -2,8 +2,9 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "PluginAgeCheq/PluginAgeCheq.h"
 
-class HelloWorld : public cocos2d::Layer
+class HelloWorld : public cocos2d::Layer, public sdkbox::AgeCheqListener
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -18,6 +19,13 @@ public:
 private:
     void createTestMenu();
 
+    void checkResponse(const std::string& rtn, const std::string& rtnmsg,
+                       int apiversion, int checktype, bool appauthorized,
+                       bool appblocked, int parentverified, bool under13,
+                       bool under18, bool underdevage, int trials);
+    
+    void associateDataResponse(const std::string& rtn,
+                               const std::string& rtnmsg);
 };
 
 #endif // __HELLOWORLD_SCENE_H__
