@@ -1,0 +1,14 @@
+{
+    "android": {
+        "AgeCheq": {
+            "DeveloperKey": "9102be76-232b-49b1-9c4f-1c6806d3a975", 
+            "AppID": "ca0e20a3-3bb8-42e1-a5ac-55af7f63dbfc"
+        }
+    }, 
+    "ios": {
+        "AgeCheq": {
+            "DeveloperKey": "9102be76-232b-49b1-9c4f-1c6806d3a975", 
+            "AppID": "ca0e20a3-3bb8-42e1-a5ac-55af7f63dbfc"
+        }
+    }
+}
