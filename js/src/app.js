@@ -8,8 +8,6 @@ var HelloWorldLayer = cc.Layer.extend({
 
         cc.log("Sample Startup")
 
-        this.createTestMenu();
-
         var winsize = cc.winSize;
 
         var logo = new cc.Sprite("res/Logo.png");
@@ -27,11 +25,20 @@ var HelloWorldLayer = cc.Layer.extend({
         menu.y = size.height / 2 + 16;
         this.addChild(menu);
 
+        var resutlLabel = cc.Label.createWithSystemFont("Response:None", "sans", 16);
+        resutlLabel.x = winsize.width/2;
+        resutlLabel.y = size.height + 200;
+        this.addChild(resutlLabel);
+        this.resultLable = resutlLabel;
+
+        this.createTestMenu();
+
         return true;
     },
 
     createTestMenu:function() {
         sdkbox.PluginAgeCheq.init();
+        var label = this.resultLable
         sdkbox.PluginAgeCheq.setListener({
             checkResponse : function (rtn, rtnmsg, apiversion, checktype, appauthorized, appblocked, parentverified, under13, under18, underdevage, trials) {
                 cc.log("checkResponse rtn:" + rtn + " rtnmsg:" + rtnmsg
@@ -39,13 +46,32 @@ var HelloWorldLayer = cc.Layer.extend({
                     + " appauthorized:" + appauthorized + " appblocked:" + appblocked
                     + " parentverified:" + parentverified + " under13:" + under13
                     + " under18:" + under18 + " underdevage:" + underdevage + " trials:" + trials);
+                var strInfo = "checkResponse:"
+                    + "\n    rtn:" + rtn
+                    + "\n    rtnmsg:" + rtnmsg
+                    + "\n    apiversion:" + apiversion
+                    + "\n    checktype:" + checktype
+                    + "\n    appauthorized:" + appauthorized
+                    + "\n    appblocked:" + appblocked
+                    + "\n    parentverified:" + parentverified
+                    + "\n    under13:" + under13
+                    + "\n    under18:" + under18
+                    + "\n    underdevage:" + underdevage
+                    + "\n    trials:" + trials;
+
+                label.setString(strInfo);
             },
             associateDataResponse : function (rtn, rtnmsg) {
                 cc.log("associateDataResponse rtn:" + rtn + " rtnmsg:" + rtnmsg);
+                var strInfo = label.getString()
+                    + "\nassociateDataResponse:"
+                    + "\n    rtn:" + rtn
+                    + "\n    rtnmsg:" + rtnmsg;
+                label.setString(strInfo);
             }
         });
 
-        var item1 = new cc.MenuItemLabel(new cc.LabelTTF("check", "sans", 28), function() {
+        var item1 = new cc.MenuItemLabel(new cc.LabelTTF("Check", "sans", 28), function() {
             cc.log("check");
             sdkbox.PluginAgeCheq.check("1426");
             sdkbox.PluginAgeCheq.associateData("1426", "ikfill");

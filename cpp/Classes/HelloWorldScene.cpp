@@ -1,4 +1,5 @@
 
+#include <sstream>
 #include "HelloWorldScene.h"
 
 USING_NS_CC;
@@ -7,13 +8,13 @@ Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
-    
+
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
-    
+
     // add layer as a child to scene
     scene->addChild(layer);
-    
+
     // return the scene
     return scene;
 }
@@ -27,9 +28,9 @@ bool HelloWorld::init()
     {
         return false;
     }
-    
+
     CCLOG("Sample Startup");
-    
+
     // add logo
     auto winsize = Director::getInstance()->getWinSize();
     auto logo = Sprite::create("Logo.png");
@@ -37,7 +38,7 @@ bool HelloWorld::init()
     logo->setPosition(Vec2(logoSize.width / 2,
                            winsize.height - logoSize.height / 2));
     addChild(logo);
-    
+
     // add quit button
     auto label = Label::createWithSystemFont("QUIT", "sans", 32);
     auto quit = MenuItemLabel::create(label, [](Ref*){
@@ -47,25 +48,31 @@ bool HelloWorld::init()
     quit->setPosition(Vec2(winsize.width / 2 - labelSize.width / 2 - 16,
                            -winsize.height / 2 + labelSize.height / 2 + 16));
     addChild(Menu::create(quit, NULL));
-    
+
     // add test menu
     createTestMenu();
-    
+
+    // add result label
+    auto resutlLabel = Label::createWithSystemFont("Response:None", "sans", 16);
+    resutlLabel->setPosition(Vec2(winsize.width/2,  labelSize.height + 200));
+    addChild(resutlLabel);
+    _resultLabel = resutlLabel;
+
     return true;
 }
 
 void HelloWorld::createTestMenu()
 {
     sdkbox::PluginAgeCheq::setListener(this);
-    
+
     auto menu = Menu::create();
-    
-    menu->addChild(MenuItemLabel::create(Label::createWithSystemFont("check", "sans", 24), [](Ref*){
+
+    menu->addChild(MenuItemLabel::create(Label::createWithSystemFont("Check", "sans", 28), [](Ref*){
         CCLOG("check");
         sdkbox::PluginAgeCheq::check("1426");
         sdkbox::PluginAgeCheq::associateData("1426", "ikfill");
     }));
-    
+
     menu->alignItemsVerticallyWithPadding(10);
     addChild(menu);
 }
@@ -88,6 +95,22 @@ void HelloWorld::checkResponse(const std::string& rtn, const std::string& rtnmsg
     CCLOG("  under18: %s", under18 ? "YES" : "NO");
     CCLOG("  underdevage: %s", underdevage ? "YES" : "NO");
     CCLOG("  trials: %d", trials);
+
+    std::stringstream ss;
+    ss << "checkResponse:"
+       << "\n    rtn:" << rtn
+       << "\n    rtnmsg:" << rtnmsg
+       << "\n    apiversion:" << apiversion
+       << "\n    checktype:" << checktype
+       << "\n    appauthorized:" << appauthorized
+       << "\n    appblocked:" << appblocked
+       << "\n    parentverified:" << parentverified
+       << "\n    under13:" << under13
+       << "\n    under18:" << under18
+       << "\n    underdevage:" << underdevage
+       << "\n    trials:" << trials;
+
+    _resultLabel->setString(ss.str());
 }
 
 void HelloWorld::associateDataResponse(const std::string& rtn,
@@ -96,5 +119,13 @@ void HelloWorld::associateDataResponse(const std::string& rtn,
     CCLOG("associateDataResponse");
     CCLOG("  rtn: %s", rtn.c_str());
     CCLOG("  rtnmsg: %s", rtnmsg.c_str());
+
+    std::stringstream ss;
+    ss << _resultLabel->getString()
+       << "\nassociateDataResponse:"
+       << "\n    rtn:" << rtn
+       << "\n    rtnmsg:" << rtnmsg;
+
+    _resultLabel->setString(ss.str());
 }
 

@@ -26,6 +26,8 @@ private:
     
     void associateDataResponse(const std::string& rtn,
                                const std::string& rtnmsg);
+    
+    cocos2d::Label* _resultLabel;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
