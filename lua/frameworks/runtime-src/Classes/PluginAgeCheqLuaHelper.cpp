@@ -1,8 +1,6 @@
 
 #include "PluginAgeCheqLuaHelper.h"
 #include "PluginAgeCheq/PluginAgeCheq.h"
-#include "CCLuaEngine.h"
-#include "tolua_fix.h"
 #include "SDKBoxLuaHelper.h"
 
 class AgeCheqListenerLua : public sdkbox::AgeCheqListener {

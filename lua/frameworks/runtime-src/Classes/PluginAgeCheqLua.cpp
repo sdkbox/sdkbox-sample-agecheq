@@ -1,6 +1,5 @@
 #include "PluginAgeCheqLua.hpp"
 #include "PluginAgeCheq/PluginAgeCheq.h"
-#include "tolua_fix.h"
 #include "SDKBoxLuaHelper.h"
 #include "sdkbox/Sdkbox.h"
 
