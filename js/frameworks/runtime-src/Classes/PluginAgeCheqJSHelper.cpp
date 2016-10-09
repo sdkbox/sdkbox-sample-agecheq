@@ -1,21 +1,14 @@
 #include "PluginAgeCheqJSHelper.h"
-#include "cocos2d_specifics.hpp"
 #include "PluginAgeCheq/PluginAgeCheq.h"
 #include "SDKBoxJSHelper.h"
 
 extern JSObject* jsb_sdkbox_PluginAgeCheq_prototype;
 static JSContext* s_cx = nullptr;
 
-class AgeCheqListenerJS : public sdkbox::AgeCheqListener {
-private:
-    JSObject* _JSDelegate;
+class AgeCheqListenerJS : public sdkbox::AgeCheqListener, public sdkbox::JSListenerBase
+{
 public:
-    void setJSDelegate(JSObject* delegate) {
-        _JSDelegate = delegate;
-    }
-
-    JSObject* getJSDelegate() {
-        return _JSDelegate;
+    AgeCheqListenerJS():sdkbox::JSListenerBase() {
     }
 
     void checkResponse(const std::string& rtn,
@@ -34,7 +27,7 @@ public:
         }
         JSContext* cx = s_cx;
         const char* func_name = "checkResponse";
-        JS::RootedObject obj(cx, _JSDelegate);
+        JS::RootedObject obj(cx, getJSDelegate());
         JSAutoCompartment ac(cx, obj);
 
 #if defined(MOZJS_MAJOR_VERSION)
@@ -88,7 +81,7 @@ public:
         }
         JSContext* cx = s_cx;
         const char* func_name = "associateDataResponse";
-        JS::RootedObject obj(cx, _JSDelegate);
+        JS::RootedObject obj(cx, getJSDelegate());
         JSAutoCompartment ac(cx, obj);
 
 #if defined(MOZJS_MAJOR_VERSION)
@@ -148,11 +141,10 @@ JSBool js_PluginAgeCheqJS_PluginAgeCheq_setListener(JSContext *cx, uint32_t argc
         {
             ok = false;
         }
-        JSObject *tmpObj = args.get(0).toObjectOrNull();
 
         JSB_PRECONDITION2(ok, cx, false, "js_PluginAgeCheqJS_PluginAgeCheq_setIAPListener : Error processing arguments");
         AgeCheqListenerJS* wrapper = new AgeCheqListenerJS();
-        wrapper->setJSDelegate(tmpObj);
+        wrapper->setJSDelegate(args.get(0));
         sdkbox::PluginAgeCheq::setListener(wrapper);
 
         args.rval().setUndefined();
